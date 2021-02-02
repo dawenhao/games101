@@ -1,6 +1,6 @@
 #include "Triangle.hpp"
 #include "rasterizer.hpp"
-#include <eigen3/Eigen/Eigen>
+#include <Eigen/Eigen>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
@@ -44,16 +44,18 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     return projection;
 }
 
-int main(int argc, const char** argv)
+int main(int argc, const char **argv)
 {
     float angle = 0;
     bool command_line = false;
     std::string filename = "output.png";
 
-    if (argc >= 3) {
+    if (argc >= 3)
+    {
         command_line = true;
         angle = std::stof(argv[2]); // -r by default
-        if (argc == 4) {
+        if (argc == 4)
+        {
             filename = std::string(argv[3]);
         }
         else
@@ -74,7 +76,8 @@ int main(int argc, const char** argv)
     int key = 0;
     int frame_count = 0;
 
-    if (command_line) {
+    if (command_line)
+    {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
         r.set_model(get_model_matrix(angle));
@@ -90,7 +93,8 @@ int main(int argc, const char** argv)
         return 0;
     }
 
-    while (key != 27) {
+    while (key != 27)
+    {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
         r.set_model(get_model_matrix(angle));
@@ -106,10 +110,12 @@ int main(int argc, const char** argv)
 
         std::cout << "frame count: " << frame_count++ << '\n';
 
-        if (key == 'a') {
+        if (key == 'a')
+        {
             angle += 10;
         }
-        else if (key == 'd') {
+        else if (key == 'd')
+        {
             angle -= 10;
         }
     }
