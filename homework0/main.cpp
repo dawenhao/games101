@@ -83,13 +83,17 @@ int main()
     // 给定一个点P=(2,1)，将该点先逆时针旋转45度，再平移(1,2),计算出变换后的坐标（要求用齐次坐标进行计算）
     Eigen::Vector3f p(2.0f, 1.0f, 1.0f); // 齐次坐标 点 第三个是1
     Eigen::Matrix3f tranMatrix;
-    tranMatrix << 1, 0, 1, 0, 1, 2, 0, 0, 1;
+    tranMatrix << 1, 0, 1,
+                  0, 1, 2, 
+                  0, 0, 1;
 
     Eigen::Matrix3f rotMatrix;
     float theta = 45.0 / 180.0 * acos(-1); // acos(-1) = pi
     float cos45 = std::cos(theta);
     float sin45 = std::sin(theta);
-    rotMatrix << cos45, -sin45, 0, sin45, cos45, 0, 0, 0, 1;
+    rotMatrix << cos45, -sin45, 0,
+                 sin45, cos45,  0,
+                 0,     0,      1;
     Eigen::Vector3f result = tranMatrix * rotMatrix * p;
     std ::cout << "变换P点的结果\n"
                << result << std::endl;
