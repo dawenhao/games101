@@ -131,6 +131,6 @@ int main(int argc, const char **argv)
             angle -= 10;
         }
     }
-
+    system("pause");
     return 0;
 }
