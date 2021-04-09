@@ -1,4 +1,6 @@
+.vs
 .vscode
 .DS_Store
+*/Debug
 info.plist
 main
