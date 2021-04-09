@@ -2,6 +2,7 @@
 .vscode
 .DS_Store
 */Debug
+*/x64
 info.plist
 main
 /lib/opencv
