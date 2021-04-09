@@ -4,3 +4,5 @@
 */Debug
 info.plist
 main
+/lib/opencv
+/lib/opencv-4.5.2-vc14_vc15.exe
