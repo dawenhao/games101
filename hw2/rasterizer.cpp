@@ -127,38 +127,68 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 
 	// TODO : Find out the bounding box of current triangle.
 	// 找出三角形的包围盒(AABB)。
-	int xMin = INT32_MAX;
-	int xMax = INT32_MIN;
-	int yMin = INT32_MAX;
-	int yMax = INT32_MIN;
-	for (auto& vec : v)
-	{
-		xMin = std::min(xMin, (int)vec[0]);
-		xMax = std::max(xMax, (int)vec[0]);
-		yMin = std::min(yMin, (int)vec[1]);
-		yMax = std::max(yMax, (int)vec[1]);
-	}
+	//int xMin = INT32_MAX;
+	//int xMax = INT32_MIN;
+	//int yMin = INT32_MAX;
+	//int yMax = INT32_MIN;
+	//for (auto& vec : v)
+	//{
+	//	xMin = std::min(xMin, (int)vec[0]);
+	//	xMax = std::max(xMax, (int)vec[0]);
+	//	yMin = std::min(yMin, (int)vec[1]);
+	//	yMax = std::max(yMax, (int)vec[1]);
+	//}
 
-	// iterate through the pixel and find if the current pixel is inside the triangle
-	std::cout << "---------------------------------------------------------" << std::endl;
-	for (int i = xMin; i < xMax; i++)
+	float xMin = std::min(v[0][0], std::min(v[1][0], v[2][0]));
+	float xMax = std::max(v[0][0], std::max(v[1][0], v[2][0]));
+	float yMin = std::min(v[0][1], std::min(v[1][1], v[2][1]));
+	float yMax = std::max(v[0][1], std::max(v[1][1], v[2][1]));
+
+	xMin = (int)std::floor(xMin);
+	xMax = (int)std::ceil(xMax);
+	yMin = (int)std::floor(yMin);
+	yMax = (int)std::ceil(yMax);
+
+	for (int i = xMin; i <= xMax; i++)
 	{
-		for (int j = yMin; j < yMax; j++)
+		for (int j = yMin; j <= yMax; j++)
 		{
-			float x = i + 0.5;
-			float y = j + 0.5;
+			float x = i + 0.5f;
+			float y = j + 0.5f;
 			bool inside = insideTriangle(x, y, t.v);
+
+			if (!inside)
+				continue;
+
+			//如果在内部，则将其位置处的插值深度值(interpolated depth value) 与深度缓冲区(depth buffer) 中的相应值进行比较。
+			// If so, use the following code to get the interpolated z value.
+			//auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
+			//float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+			//float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+			//z_interpolated *= w_reciprocal;
+
+			std::tuple<float, float, float> result = computeBarycentric2D(x, y, t.v);
+			float alpha;
+			float beta;
+			float gamma;
+			std::tie(alpha, beta, gamma) = result;
+			float w_reciprocal = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+			float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+			z_interpolated *= w_reciprocal;
+
+			int index = get_index(i, j);
+			float depth = depth_buf[index];
+			if (z_interpolated < depth)
+			{
+				depth_buf[index] = z_interpolated;
+				Eigen::Vector3f color = t.getColor();
+				Eigen::Vector3f point(i, j, z_interpolated);
+				set_pixel(point, color);
+			}
+
+			// TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
 		}
 	}
-	std::cout << "---------------------------------------------------------" << std::endl;
-
-	// If so, use the following code to get the interpolated z value.
-	//auto[alpha, beta, gamma] = computeBarycentric2D(x, y, t.v);
-	//float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
-	//float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
-	//z_interpolated *= w_reciprocal;
-
-	// TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
 }
 
 void rst::rasterizer::set_model(const Eigen::Matrix4f& m)

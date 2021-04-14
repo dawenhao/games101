@@ -28,10 +28,4 @@ public:
     void setTexCoord(int ind, float s, float t); /*set i-th vertex texture coordinate*/
     std::array<Vector4f, 3> toVector4() const;
 };
-
-
-
-
-
-
 #endif //RASTERIZER_TRIANGLE_H

@@ -32,8 +32,8 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
 {
 	// TODO: Copy-paste your implementation from the previous assignment.
 
-	Eigen::Matrix4f MToO = Eigen::Matrix4f::Identity();
-	MToO <<
+	Eigen::Matrix4f PToO = Eigen::Matrix4f::Identity();
+	PToO <<
 		zNear, 0, 0, 0,
 		0, zNear, 0, 0,
 		0, 0, zNear + zFar, (-1)* zNear* zFar,
@@ -42,7 +42,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
 	Eigen::Matrix4f projection = Eigen::Matrix4f::Identity();
 
 	float radian = eye_fov / 2 / 180.0 * MY_PI;
-	float top = std::tan(eye_fov) * zNear;
+	float top = std::tan(radian) * zNear;
 	float bottom = -top;
 	float right = aspect_ratio * top;
 	float left = -right;
@@ -60,7 +60,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
 		0, 0, 2 / (zNear - zFar), 0,
 		0, 0, 0, 1;
 
-	projection = Ortho2 * Ortho1 * MToO;
+	projection = Ortho2 * Ortho1 * PToO;
 	return projection;
 }
 
