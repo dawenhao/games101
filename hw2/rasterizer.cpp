@@ -127,17 +127,6 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 
 	// TODO : Find out the bounding box of current triangle.
 	// 找出三角形的包围盒(AABB)。
-	//int xMin = INT32_MAX;
-	//int xMax = INT32_MIN;
-	//int yMin = INT32_MAX;
-	//int yMax = INT32_MIN;
-	//for (auto& vec : v)
-	//{
-	//	xMin = std::min(xMin, (int)vec[0]);
-	//	xMax = std::max(xMax, (int)vec[0]);
-	//	yMin = std::min(yMin, (int)vec[1]);
-	//	yMax = std::max(yMax, (int)vec[1]);
-	//}
 
 	float xMin = std::min(v[0][0], std::min(v[1][0], v[2][0]));
 	float xMax = std::max(v[0][0], std::max(v[1][0], v[2][0]));
