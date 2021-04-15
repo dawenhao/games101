@@ -42,7 +42,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
 	Eigen::Matrix4f projection = Eigen::Matrix4f::Identity();
 
 	float radian = eye_fov / 2 / 180.0 * MY_PI;
-	float top = std::tan(radian) * zNear;
+	float top = std::tan(radian) * -zNear;
 	float bottom = -top;
 	float right = aspect_ratio * top;
 	float left = -right;
@@ -115,6 +115,21 @@ int main(int argc, const char** argv)
 	int key = 0;
 	int frame_count = 0;
 
+	r.clear(rst::Buffers::Color | rst::Buffers::Depth);
+
+	r.set_model(get_model_matrix(angle));
+	r.set_view(get_view_matrix(eye_pos));
+	r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
+
+	r.draw(pos_id, ind_id, col_id, rst::Primitive::Triangle);
+	cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
+	image.convertTo(image, CV_8UC3, 1.0f);
+	cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
+
+	cv::imwrite(filename, image);
+
+	return 0;
+
 	if (command_line)
 	{
 		r.clear(rst::Buffers::Color | rst::Buffers::Depth);
@@ -133,7 +148,7 @@ int main(int argc, const char** argv)
 		return 0;
 	}
 
-	while (key != 27)
+	/*while (key != 27)
 	{
 		r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
@@ -150,7 +165,7 @@ int main(int argc, const char** argv)
 		key = cv::waitKey(10);
 
 		std::cout << "frame count: " << frame_count++ << '\n';
-	}
+	}*/
 
 	return 0;
 }
