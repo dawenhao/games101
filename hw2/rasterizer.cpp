@@ -155,19 +155,17 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 		yMax = std::max((int)vec.y(), yMax);
 	}
 
-	bool useMSAA = true;
+	bool useMSAA = false;
 	if (useMSAA)
 	{
 		int single = 4;
 		float pixelCount = single * single;
-		for (int i = xMin; i <= xMax; i++)
+		for (int i = xMin - 1; i <= xMax; i++)
 		{
-			for (int j = yMin; j <= yMax; j++)
+			for (int j = yMin - 1; j <= yMax; j++)
 			{
 				float singleVal = 1 / pixelCount; // 1个像素被拆成几个像素，每个像素一半的长宽
 				int insideCount = 0;
-
-				float minDepth = FLT_MAX;
 
 				// 循环4个像素有几个在三角形内
 				for (int k = 0; k < single; k++) // x
@@ -184,30 +182,31 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 						}
 
 						insideCount++;
-						std::tuple<float, float, float> result = computeBarycentric2D(x, y, t.v);
-						float alpha;
-						float beta;
-						float gamma;
-						std::tie(alpha, beta, gamma) = result;
-						float w_reciprocal = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
-						float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
-						z_interpolated *= w_reciprocal;
-						minDepth = std::min(minDepth, z_interpolated);
+
 					}
 				}
 
 				if (insideCount == 0)
 					continue;
 
+				std::tuple<float, float, float> result = computeBarycentric2D(i, j, t.v);
+				float alpha;
+				float beta;
+				float gamma;
+				std::tie(alpha, beta, gamma) = result;
+				float w_reciprocal = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+				float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
+				z_interpolated *= w_reciprocal;
+
 				float percent = insideCount / pixelCount;
 
 				int index = get_index(i, j);
 				float depth = depth_buf[index];
-				if (minDepth < depth)
+				if (z_interpolated < depth)
 				{
-					depth_buf[index] = minDepth;
+					depth_buf[index] = z_interpolated;
 					Eigen::Vector3f color = t.getColor() * percent;
-					Eigen::Vector3f point(i, j, minDepth);
+					Eigen::Vector3f point(i, j, z_interpolated);
 					// TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
 					set_pixel(point, color);
 				}
@@ -216,9 +215,9 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
 	}
 	else
 	{
-		for (int i = xMin; i <= xMax; i++)
+		for (int i = xMin-1; i <= xMax; i++)
 		{
-			for (int j = yMin; j <= yMax; j++)
+			for (int j = yMin-1; j <= yMax; j++)
 			{
 				float x = i + 0.5f;
 				float y = j + 0.5f;
