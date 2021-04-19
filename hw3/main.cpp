@@ -267,6 +267,7 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
 
 int main(int argc, const char** argv)
 {
+	std::cout << "开始" << std::endl;
 	std::vector<Triangle*> TriangleList;
 
 	float angle = 140.0;
@@ -277,6 +278,7 @@ int main(int argc, const char** argv)
 	std::string obj_path = "models/spot/";
 
 	// Load .obj File
+	std::cout << "加载模型" << std::endl;
 	bool loadout = Loader.LoadFile("models/spot/spot_triangulated_good.obj");
 	for (auto mesh : Loader.LoadedMeshes)
 	{
@@ -293,6 +295,7 @@ int main(int argc, const char** argv)
 		}
 	}
 
+	std::cout << "创建光栅化器" << std::endl;
 	rst::rasterizer r(700, 700);
 
 	auto texture_path = "hmap.jpg";
@@ -368,11 +371,14 @@ int main(int argc, const char** argv)
 		r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
 
 		//r.draw(pos_id, ind_id, col_id, rst::Primitive::Triangle);
+		std::cout << "开始draw 三角数量" << TriangleList.size() << std::endl;
 		r.draw(TriangleList);
+		std::cout << "画完一次 ----------------------------------------------------------------------------" << std::endl;
 		cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
 		image.convertTo(image, CV_8UC3, 1.0f);
 		cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
+		std::cout << "显示窗口" << std::endl;
 		cv::imshow("image", image);
 		cv::imwrite(filename, image);
 		key = cv::waitKey(10);
