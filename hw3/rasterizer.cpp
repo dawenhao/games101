@@ -298,8 +298,6 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
 			//    * Z is interpolated view space depth for the current pixel
 			//    * zp is depth between zNear and zFar, used for z-buffer
 
-
-
 			std::tuple <float, float, float> barycentric = computeBarycentric2D(i, j, t.v);
 			float alpha = 0;
 			float beta = 0;
@@ -314,12 +312,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
 
 			if (currDepth > zp)
 				continue;
-
 			depth_buf[index] = zp;
-			Vector2i p(i, j);
-			Vector3f color(255, 255, 255);
-			std::cout << "设置点 " << p << " 的颜色" << std::endl;
-			set_pixel(p, color);
 
 			// TODO: Interpolate the attributes: 插值属性
 			// auto interpolated_color
