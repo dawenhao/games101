@@ -2,7 +2,7 @@
 // Created by goksu on 4/6/19.
 //
 
-#pragma once
+#pragma once // 为了避免同一个头文件被包含（include）多次
 
 #include <eigen3/Eigen/Eigen>
 #include <optional>

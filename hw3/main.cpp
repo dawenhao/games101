@@ -1,6 +1,5 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
-
 #include "global.hpp"
 #include "rasterizer.hpp"
 #include "Triangle.hpp"
