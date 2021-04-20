@@ -275,13 +275,13 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
 		xMin = std::min(xMin, x);
 		xMax = std::max(xMax, x);
 
-		yMin = std::min(yMin, x);
-		yMax = std::max(yMax, x);
+		yMin = std::min(yMin, y);
+		yMax = std::max(yMax, y);
 	}
 
-	for (int i = xMin; i < xMax; i++)
+	for (int i = xMin; i <= xMax; i++)
 	{
-		for (int j = yMin; j < yMax; j++)
+		for (int j = yMin; j <= yMax; j++)
 		{
 			float x = i + 0.5f;
 			float y = j + 0.5f;
@@ -310,8 +310,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
 			int index = get_index(i, j);
 			int currDepth = depth_buf[index];
 
-			std::cout << zp << std::endl;
-			if (currDepth <= zp)
+			if (zp >= currDepth)
 				continue;
 
 			depth_buf[index] = zp;
@@ -362,7 +361,8 @@ void rst::rasterizer::clear(rst::Buffers buff)
 	}
 	if ((buff & rst::Buffers::Depth) == rst::Buffers::Depth)
 	{
-		std::fill(depth_buf.begin(), depth_buf.end(), std::numeric_limits<float>::infinity());
+		//std::fill(depth_buf.begin(), depth_buf.end(), std::numeric_limits<float>::infinity());
+		std::fill(depth_buf.begin(), depth_buf.end(), 1000000);
 	}
 }
 
