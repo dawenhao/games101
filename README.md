@@ -12,7 +12,8 @@ Eigen官网 https://eigen.tuxfamily.org/
 安装VS2019
 ## 配置环境
 创建C++空工程，工程邮件属性选择VC++目录，在包含目录一项，编辑头文件的位置。库目录一项，编辑静态链接库的位置。
-选择链接器->输入->附加依赖项，把opencv的lib库名字输入进去(*d.lib此类文件是debug使用的，不含d的为release使用的)
+选择链接器->输入->附加依赖项，把opencv的lib库名字输入进去(\*d.lib此类文件是debug使用的，不含d的为release使用的)
+opencv的release和debug不可以同时加进去，调试时会报错！（坑！）
 
 配置至此，已经可以生成工程了，但是还无法调试，如果调试会报某某dll找不到。
 
