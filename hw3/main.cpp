@@ -386,11 +386,14 @@ int main(int argc, const char** argv)
 		r.set_view(get_view_matrix(eye_pos));
 		r.set_projection(get_projection_matrix(45.0, 1, 0.1, 50));
 
+		std::cout << "开始draw 三角数量" << TriangleList.size() << std::endl;
 		r.draw(TriangleList);
+		std::cout << "绘画结束 ----------------------------------------------------------------------------" << std::endl;
 		cv::Mat image(700, 700, CV_32FC3, r.frame_buffer().data());
 		image.convertTo(image, CV_8UC3, 1.0f);
 		cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
+		std::cout << "生成图片" << std::endl;
 		cv::imwrite(filename, image);
 
 		return 0;
