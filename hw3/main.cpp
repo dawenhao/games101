@@ -262,21 +262,21 @@ Eigen::Vector3f displacement_fragment_shader(const fragment_shader_payload& payl
 Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
 {
 
-	Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
-	Eigen::Vector3f kd = payload.color;
-	Eigen::Vector3f ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
+	//Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
+	//Eigen::Vector3f kd = payload.color;
+	//Eigen::Vector3f ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
 
-	auto l1 = light{ {20, 20, 20}, {500, 500, 500} };
-	auto l2 = light{ {-20, 20, 0}, {500, 500, 500} };
+	//auto l1 = light{ {20, 20, 20}, {500, 500, 500} };
+	//auto l2 = light{ {-20, 20, 0}, {500, 500, 500} };
 
-	std::vector<light> lights = { l1, l2 };
-	Eigen::Vector3f amb_light_intensity{ 10, 10, 10 };
-	Eigen::Vector3f eye_pos{ 0, 0, 10 };
+	//std::vector<light> lights = { l1, l2 };
+	//Eigen::Vector3f amb_light_intensity{ 10, 10, 10 };
+	//Eigen::Vector3f eye_pos{ 0, 0, 10 };
 
-	float p = 150;
+	//float p = 150;
 
-	Eigen::Vector3f color = payload.color;
-	Eigen::Vector3f point = payload.view_pos;
+	//Eigen::Vector3f color = payload.color;
+	//Eigen::Vector3f point = payload.view_pos;
 	Eigen::Vector3f normal = payload.normal;
 
 	float kh = 0.2, kn = 0.1;
